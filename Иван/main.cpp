@@ -1,42 +1,25 @@
 #include "TXLib.h"
+#include "Button.cpp"
 #include <string>
 #include <iostream>
 #include <ctime>
+
+void drawQuest(const char* text)
+{
+    txSetFillColor(RGB(195, 195, 195));
+    txRectangle(0, 0, 800, 600);
+
+    txSetFillColor(TX_WHITE);
+    txRectangle(200, 100, 750, 500);
+
+    txDrawText(200, 100, 750, 500,text);
+}
 
 void draw_beta(){
     // BETA
     txSetColor(TX_BLACK);
     txSelectFont("Courier New", 40, 20);
     txTextOut(50, 550, "ALPHA 1.9");
-}
-
-struct Button
-{
-    int x;
-    int y;
-    int x2;
-    int y2;
-    const char* text;
-    HDC picture;
-};
-
-void drawButton(Button btn) {
-    if(btn.text != ""){
-        txDrawText(btn.x, btn.y, btn.x2, btn.y2, btn.text);
-    }
-    if (btn.picture != nullptr)
-        txBitBlt(txDC(), btn.x, btn.y, btn.x2-btn.x, btn.y2 - btn.y, btn.picture);
-}
-
-bool clickButton(Button btn)
-{
-    if (txMouseX() > btn.x && txMouseX() < btn.x2
-        && txMouseY() > btn.y && txMouseY() < btn.y2
-        && txMouseButtons() == 1){
-        return true;
-    }
-    else
-        return false;
 }
 
 int main()
@@ -109,9 +92,6 @@ int main()
     HDC floppa = txLoadImage("floppa.bmp");
     HDC mama = txLoadImage("mama.bmp");
 
-    HDC garden = txLoadImage("garden.bmp");
-    HDC garden2 = txLoadImage("garden2.bmp");
-
 
     HDC menu = a;
     bool nrk = true;
@@ -135,19 +115,12 @@ int main()
 
 
     Button selects[6];
-    selects[0] = {50, 270, 250,  300,  "Âûáðàòü",  nullptr};
-    selects[1] = {300, 270, 500, 300, "Âûáðàòü", nullptr};
-    selects[2] = {550, 270, 750, 300, "Âûáðàòü", nullptr};
-    selects[3] = {50, 500, 250,  550,  "Âûáðàòü",  nullptr};
-    selects[4] = {300, 500, 500, 550, "Âûáðàòü", nullptr};
-    selects[5] = {550, 500, 750, 550, "Âûáðàòü", nullptr};
-
-    /*Button select1 = {50, 270, 250,  300,  "Âûáðàòü",  nullptr};
-    Button select2 = {300, 270, 500, 300, "Âûáðàòü", nullptr};
-    Button select3 = {550, 270, 750, 300, "Âûáðàòü", nullptr};
-    Button select4 = {50, 500, 250,  550,  "Âûáðàòü",  nullptr};
-    Button select5 = {300, 500, 500, 550, "Âûáðàòü", nullptr};
-    Button select6 = {550, 500, 750, 550, "Âûáðàòü", nullptr};*/
+    selects[0] = {50, 270, 250,  300, "Âûáðàòü", nullptr, vzlom, vzlom2};
+    selects[1] = {300, 270, 500, 300, "Âûáðàòü", nullptr, zheka, zheka2};
+    selects[2] = {550, 270, 750, 300, "Âûáðàòü", nullptr, magnum};
+    selects[3] = {50, 500, 250,  550, "Âûáðàòü", nullptr, floppa};
+    selects[4] = {300, 500, 500, 550, "Âûáðàòü", nullptr, txLoadImage("garden.bmp"), txLoadImage("garden2.bmp")};
+    selects[5] = {550, 500, 750, 550, "Âûáðàòü", nullptr, mama};
 
     Button buy1 = {500, 280 - scroll_y, 600, 315 - scroll_y, "BUY", nullptr};
     Button buy2 = {490, 2, 510, 22, "BUY", nullptr};
@@ -608,45 +581,16 @@ int main()
 
 
         else if(PAGE == "Quest1") {
-            txSetFillColor(RGB(195, 195, 195));
-            txRectangle(0, 0, 800, 600);
-
-            txSetFillColor(TX_WHITE);
-            txRectangle(200, 100, 750, 500);
-
-            txDrawText(200, 100, 750, 500, "Â 1õ Ïîêóïêà íà öåëûé ðàéîí è áàíäó.\n\n È âàùå ×Å ÕÀ×Ó ÒÎ È ÄåËÀÞ");
+            drawQuest("Â 1õ Ïîêóïêà íà öåëûé ðàéîí è áàíäó.\n\n È âàùå ×Å ÕÀ×Ó ÒÎ È ÄåËÀÞ");
         }
-
-
         else if(PAGE == "Quest2"){
-            txSetFillColor(RGB(195, 195, 195));
-            txRectangle(0, 0, 800, 600);
-
-            txSetFillColor(TX_WHITE);
-            txRectangle(200, 100, 750, 500);
-
-            txDrawText(200, 100, 750, 500,"ÎÍÈ ÏÐÈÊÎËÜÍÛÅ ÏÀÖÀÍÛ \n È ×Å ÕÀ×Ó ÒÎ È ÄÅËÀÞ!!!!\n È ÍÈÊÒÎ ÌÍÅ ÍÅ ÏÎÌÅØÀÅÒ!!!!");
+            drawQuest("ÎÍÈ ÏÐÈÊÎËÜÍÛÅ ÏÀÖÀÍÛ \n È ×Å ÕÀ×Ó ÒÎ È ÄÅËÀÞ!!!!\n È ÍÈÊÒÎ ÌÍÅ ÍÅ ÏÎÌÅØÀÅÒ!!!!");
         }
-
         else if(PAGE == "Quest3"){
-
-            txSetFillColor(RGB(195, 195, 195));
-            txRectangle(0, 0, 800, 600);
-
-            txSetFillColor(TX_WHITE);
-            txRectangle(200, 100, 750, 500);
-
-
-            txDrawText(200, 100, 750, 500,"ÊÎÍÅ×ÍÎ ÆÅ ÍÅÒ È ÊÎÃÄÀ ÂÛ ÝÒÎ ×ÈÒÀÅÒÅ \n Ê ÂÀÌ ÓÆÅ ÑÎÁÈÐÀÅÒÑß ÍÀÐßÄ");
+            drawQuest("ÊÎÍÅ×ÍÎ ÆÅ ÍÅÒ È ÊÎÃÄÀ ÂÛ ÝÒÎ ×ÈÒÀÅÒÅ \n Ê ÂÀÌ ÓÆÅ ÑÎÁÈÐÀÅÒÑß ÍÀÐßÄ");
         }
         else if(PAGE == "Quest4"){
-            txSetFillColor(RGB(195, 195, 195));
-            txRectangle(0, 0, 800, 600);
-
-            txSetFillColor(TX_WHITE);
-            txRectangle(200, 100, 750, 500);
-
-            txDrawText(200, 100, 750, 500,"ÊÎÍÅ×ÍÎ ÆÅ ÄÀ è  Âñÿ ÈãÐà íàïèñîíà Ïîä Êàéôîì ÒßÆÅËÛÕ ÍÀÐÊÎÒÈÊÎÂ\n è Ó ÀÂÒÎÐÀ ÄÎÌÀ \n 18 ÊÃ ÃÅÐÎÈÍÀ è ÏÎÄÄÅËÜÍÛÅ ÄÅÍÜÃÈ\n ÂÎÒ ÀÄÐÅÑÑ 19414, Ñóìñüêà îáëàñòü, ì³ñòî Ñóìè, ïðîâ. Âîëîäèìèðñüêà, 89 !!!");
+            drawQuest("ÊÎÍÅ×ÍÎ ÆÅ ÄÀ è  Âñÿ ÈãÐà íàïèñîíà Ïîä Êàéôîì ÒßÆÅËÛÕ ÍÀÐÊÎÒÈÊÎÂ\n è Ó ÀÂÒÎÐÀ ÄÎÌÀ \n 18 ÊÃ ÃÅÐÎÈÍÀ è ÏÎÄÄÅËÜÍÛÅ ÄÅÍÜÃÈ\n ÂÎÒ ÀÄÐÅÑÑ 19414, Ñóìñüêà îáëàñòü, ì³ñòî Ñóìè, ïðîâ. Âîëîäèìèðñüêà, 89 !!!");
         }
 
         else if(PAGE == "Police"){
@@ -662,49 +606,16 @@ int main()
             txSetFillColor(RGB(195, 195, 195));
             txRectangle(0, 0, 800, 600);
 
-            txBitBlt(txDC(), 50, 50, 200, 200, vzlom2, 0, 0);
-            txBitBlt(txDC(), 300, 50, 200, 200, zheka2, 0, 0);
-            txBitBlt(txDC(), 550, 50, 200, 200, magnum2, 0, 0);
-            txBitBlt(txDC(), 50, 300, 200, 200, floppa2, 0, 0);
-            txBitBlt(txDC(), 300, 300, 200, 200, garden2, 0, 0);
-            txBitBlt(txDC(), 550, 300, 200, 200, mama2, 0, 0);
+            for (int i = 0; i < 6; i = i + 1)
+            {
+                txBitBlt(txDC(), selects[i].x, selects[i].y, 200, 200, selects[i].avatarMini);
+                txSetColor(TX_BLACK);
+                txRectangle(selects[i].x, selects[i].y, selects[i].x2, selects[i].y2);
 
-            txSetColor(TX_BLACK);
-
-            txRectangle(50, 270, 250,  300);
-            txRectangle(300, 270, 500, 300);
-            txRectangle(550, 270, 750, 300);
-            txRectangle(50, 500, 250,  550);
-            txRectangle(300, 500, 500,  550);
-            txRectangle(550, 500, 750,  550);
-
-            drawButton(selects[0]);
-            drawButton(selects[1]);
-            drawButton(selects[2]);
-            drawButton(selects[3]);
-            drawButton(selects[4]);
-            drawButton(selects[5]);
-
-            if(clickButton(selects[0])){
-                ava = vzlom;
+                drawButton(selects[i]);
+                if (clickButton(selects[i]))
+                    ava = selects[i].avatar;
             }
-            if(clickButton(selects[1])){
-                ava = zheka;
-            }
-            if(clickButton(selects[2])){
-                ava = magnum;
-            }
-            if(clickButton(selects[3])){
-                ava = floppa;
-            }
-            if(clickButton(selects[4])){
-                ava = garden;
-            }
-            if(clickButton(selects[5])){
-                ava = mama;
-            }
-
-
         }
 
 
@@ -727,12 +638,11 @@ int main()
     txDeleteDC(grib);
     txDeleteDC(cocaine);
     txDeleteDC(kot);
-    txDeleteDC(floppa);
-    txDeleteDC(floppa2);
-    txDeleteDC(magnum2);
-    txDeleteDC(magnum);
-    txDeleteDC(mama2);
-    txDeleteDC(mama);
+    for (int i = 0; i < 6; i++)
+    {
+        txDeleteDC(selects[i].avatar);
+        txDeleteDC(selects[i].avatarMini);
+    }
 
     return 0;
 }
