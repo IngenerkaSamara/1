@@ -1,21 +1,8 @@
 #include "TXLib.h"
 #include "Block.cpp"
+#include "Dragon.cpp"
+#include "Thorn.cpp"
 
-struct Dragon
-{
-    int Dragonx;
-    int y;
-    int frameX;
-    int frameY;
-    int frame;
-    int speed;
-    int hpp;
-    int posL;
-    int posR;
-    HDC picture;
-    HDC hp;
-    HDC hpEmpty;
-};
 const int STATE_LEFT = 0;
 //Камеры для пола, объектов, фона и другого...
 void camers(int *cameraX, int *heroX, int *objcam, int *floorCam)
@@ -60,6 +47,7 @@ int main()
     int cameraX = 2700;//Смещение камеры
     int objcam = 1500; //объекты
     int floorCam = 400; //Смещение камеры пола (земли)
+
     //Блоки
     HDC block1 = txLoadImage ("floor_earth.bmp");
     int nBlocks = 3;
@@ -67,6 +55,7 @@ int main()
     blocks[0] = {-180, 800, 700, 212, block1};
     blocks[1] = {880, 800, 700, 212, block1};
     blocks[2] = {880, 300, 700, 102, block1};
+
     //Шип
     HDC thorn = txLoadImage ("thorn.bmp");
     int nThorns = 4;
@@ -75,6 +64,7 @@ int main()
     thorns[1] = {150, 690, thorn};
     thorns[2] = {1200, 690, thorn};
     thorns[3] = {1250, 690, thorn};
+
     //Деревья
     HDC tree1 = txLoadImage ("tree_kind_1.bmp");
     HDC tree2 = txLoadImage ("tree_kind_2.bmp");
@@ -93,15 +83,17 @@ int main()
     HDC hp_barbg = txLoadImage ("hp_barbg.bmp");
     HDC hp_bar = txLoadImage ("hp_bar.bmp");
     int hp_points = 300;
+
     //Враг дракон
-    HDC dragon = txLoadImage ("Dragon.bmp");
-    HDC enemies_hp_bar = txLoadImage ("enemies_hp_bar.bmp");
-    HDC enemies_hp_bar1 = txLoadImage ("enemies_hp_bar1.bmp");
     int nDragons = 3;
     Dragon dragons[nDragons];
-    dragons[0] = {500, 750, 230, 0, 0, 15, 336, 500, 700, dragon, enemies_hp_bar, enemies_hp_bar1};
-    dragons[1] = {1300, 600, 230, 0, 0, 15, 336, 1300, 1360, dragon, enemies_hp_bar, enemies_hp_bar1};
-    dragons[2] = {200, 600, 230, 0, 0, 100, 1000, 200, 350, dragon, enemies_hp_bar, enemies_hp_bar1};
+    dragons[0] = {500, 750, 230, 0, 0, 15, 336, 500, 700,
+        txLoadImage ("Dragon.bmp"), txLoadImage ("enemies_hp_bar.bmp"), txLoadImage ("enemies_hp_bar1.bmp")};
+    dragons[1] = {1300, 600, 230, 0, 0, 15, 336, 1300, 1360,
+        dragons[0].picture, dragons[0].hp, dragons[0].hpEmpty};
+    dragons[2] = {200, 600, 230, 0, 0, 100, 1000, 200, 350,
+        dragons[0].picture, dragons[0].hp, dragons[0].hpEmpty};
+
     //пуля
     HDC skill_bar_empty = txLoadImage ("skill_bar_empty.bmp");
     HDC skill_bar = txLoadImage ("skill_bar.bmp");
@@ -133,7 +125,7 @@ int main()
         //блоки
         for (int nomer1 = 0; nomer1 < nBlocks; nomer1 = nomer1 + 1)
         {
-            drawBlock(blocks[nomer1], objcam);
+            blocks[nomer1].draw(objcam);
             blockCollision(&heroX, &heroY, objcam, blocks[nomer1]);
         }
         //Таблица
@@ -188,57 +180,39 @@ int main()
             return 0;
           }
 
+        //Драконы
         for (int nomer2 = 0; nomer2 < nDragons; nomer2 = nomer2 + 1)
         {
-        txTransparentBlt (txDC(), dragons[nomer2].Dragonx + objcam, dragons[nomer2].y, 220, 148, dragons[nomer2].picture, dragons[nomer2].frameX * dragons[nomer2].frame, dragons[nomer2].frameY, TX_WHITE);
+            dragons[nomer2].Move(objcam);
+            dragons[nomer2].draw(objcam);
 
-        dragons[nomer2].Dragonx = dragons[nomer2].Dragonx + dragons[nomer2].speed;
-
-        if(dragons[nomer2].Dragonx + objcam < dragons[nomer2].posL + objcam)
-          {
-            dragons[nomer2].speed = 15;
-            dragons[nomer2].frame = 0;
-          }
-        else if(dragons[nomer2].Dragonx + objcam > dragons[nomer2].posR + objcam)
-          {
-           dragons[nomer2].speed = -15;
-           dragons[nomer2].frame = 1;
-          }
-        //Полоса хп впагов
-        txTransparentBlt (txDC(), dragons[nomer2].Dragonx + objcam + 80, dragons[nomer2].y - 30, 100, 27, dragons[nomer2].hpEmpty, 0, 0, TX_WHITE);
-        txTransparentBlt (txDC(), dragons[nomer2].Dragonx + objcam + 80, dragons[nomer2].y - 30, dragons[nomer2].hpp /* * 100 / MAX_HP*/, 27, dragons[nomer2].hp, 0, 0, TX_WHITE);
-
-        char str1[100];
-        sprintf(str1, "HP: %d", dragons[nomer2].hpp);
-        txTextOut(dragons[nomer2].Dragonx + objcam + 85, dragons[nomer2].y - 27, str1);
-
-        if (dragons[nomer2].Dragonx + objcam < heroX + 150 && dragons[nomer2].Dragonx + objcam + 9 > heroX && dragons[nomer2].y - 455 < heroY)
-        {
-            hp_points = hp_points - 1;
-        }
-        //убийство врага
-        if(xbullet < dragons[nomer2].Dragonx + objcam + 100 && xbullet > dragons[nomer2].Dragonx + objcam - 400 && visiblebullet)
-         {
-           dragons[nomer2].hpp = dragons[nomer2].hpp - 40;
-         }
-        if(dragons[nomer2].hpp < 0)
-          {
-            dragons[nomer2].y = 2000;
-          }
-        //Убийство врага мечом
-        if (txMouseButtons() == 1)
-          {
-            if(heroFrameY == 2000 && dragons[nomer2].Dragonx + objcam - 350 < heroX
-             && dragons[nomer2].Dragonx + objcam + 150 > heroX  && dragons[nomer2].y - 455 < heroY)
-              {
-                 dragons[nomer2].hpp = dragons[nomer2].hpp - 10;
-              }
-            else if(heroFrameY == 2500 && dragons[nomer2].Dragonx + objcam - 150 < heroX
-            && dragons[nomer2].Dragonx + objcam + 150 > heroX  && dragons[nomer2].y - 455 < heroY)
-              {
-                 dragons[nomer2].hpp = dragons[nomer2].hpp - 10;
+            if (dragons[nomer2].Dragonx + objcam < heroX + 150 && dragons[nomer2].Dragonx + objcam + 9 > heroX && dragons[nomer2].y - 455 < heroY)
+            {
+                hp_points = hp_points - 1;
+            }
+            //убийство врага
+            if(xbullet < dragons[nomer2].Dragonx + objcam + 100 && xbullet > dragons[nomer2].Dragonx + objcam - 400 && visiblebullet)
+             {
+               dragons[nomer2].hpp = dragons[nomer2].hpp - 40;
              }
-          }
+            if(dragons[nomer2].hpp < 0)
+              {
+                dragons[nomer2].y = 2000;
+              }
+            //Убийство врага мечом
+            if (txMouseButtons() == 1)
+              {
+                if(heroFrameY == 2000 && dragons[nomer2].Dragonx + objcam - 350 < heroX
+                 && dragons[nomer2].Dragonx + objcam + 150 > heroX  && dragons[nomer2].y - 455 < heroY)
+                  {
+                     dragons[nomer2].hpp = dragons[nomer2].hpp - 10;
+                  }
+                else if(heroFrameY == 2500 && dragons[nomer2].Dragonx + objcam - 150 < heroX
+                && dragons[nomer2].Dragonx + objcam + 150 > heroX  && dragons[nomer2].y - 455 < heroY)
+                  {
+                     dragons[nomer2].hpp = dragons[nomer2].hpp - 10;
+                 }
+              }
         }
 
         //max hp

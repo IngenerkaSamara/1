@@ -7,17 +7,12 @@ struct Block
     int width;
     int height;
     HDC picture;
+
+    void draw(int objcam)
+    {
+        txTransparentBlt (txDC(), x + objcam, y, width, height, picture, 0, 0, TX_WHITE);
+    }
 };
-struct Thorn
-{
-    int x;
-    int y;
-    HDC picture;
-};
-void drawBlock(Block block1, int objcam)
-{
-    txTransparentBlt (txDC(), block1.x + objcam, block1.y, block1.width, block1.height, block1.picture, 0, 0, TX_WHITE);
-}
 void blockCollision(int* heroX, int* heroY, int objcam, Block block1)
 {
     if (*heroX      > block1.x + objcam - 140 &&

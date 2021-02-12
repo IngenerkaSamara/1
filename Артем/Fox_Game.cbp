@@ -33,6 +33,8 @@
 			<Add option="-fexceptions" />
 		</Compiler>
 		<Unit filename="Block.cpp" />
+		<Unit filename="Dragon.cpp" />
+		<Unit filename="Thorn.cpp" />
 		<Unit filename="main.cpp" />
 		<Extensions>
 			<code_completion />
