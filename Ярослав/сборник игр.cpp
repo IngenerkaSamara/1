@@ -5,81 +5,85 @@
 #include "bomb it.cpp"
 #include "tanks.cpp"
 #include "shotgame.cpp"
-void menu(int g, int g2, int g3, int g4, int g5, int g6, int g7, int xMenu)
+
+int GameButtonOpen(int xgbo, int ygbo)
+{
+    int Game = 0;
+    if (txMouseX() >= xgbo &&
+        txMouseX() <= xgbo + 200 &&
+        txMouseY() >= ygbo &&
+        txMouseY() <= ygbo + 200/* &&
+        txMouseButtons() & 2*/)
+    {
+        Game = 1;
+    }
+}
+
+int GameButtonFocus(int xgbo, int ygbo)
+{
+    int Game = 0;
+    if (txMouseX() >= xgbo &&
+        txMouseX() <= xgbo + 200 &&
+        txMouseY() >= ygbo &&
+        txMouseY() <= ygbo + 200)
+    {
+        Game = 1;
+    }
+}
+
+
+void menu(int xMenu)
 {
     txSetColour(TX_BLACK);
     txSetFillColour(TX_BLACK);
     txRectangle(0, 0, 1600, 1000);
     //
-    if(g == 0)
-    {
     txSetColour(TX_WHITE, 2);
     txSetFillColour(TX_BLACK);
-    txRectangle(xMenu, 200, xMenu + 200, 400);
-    }
-    if(g == 1)
-    {
-    txSetColour(TX_WHITE, 2);
-    txSetFillColour(TX_BLACK);
-    txRectangle(xMenu - 10, 210, xMenu + 210, 390);
-    }
+    if (GameButtonFocus(200, 200))
+                txRectangle(xMenu - 10, 210, xMenu + 210, 390);
+    else        txRectangle(xMenu, 200, xMenu + 200, 400);
 
     txSetColour(TX_GREEN);
     txSetFillColour(TX_GREEN);
     txRectangle(xMenu + 20, 380, xMenu + 80, 360);
-
-    txSetColour(TX_GREEN);
-    txSetFillColour(TX_GREEN);
     txRectangle(xMenu + 60, 360, xMenu + 80, 340);
 
     txSetColour(TX_RED);
     txSetFillColour(TX_RED);
     txRectangle(xMenu + 125, 320, xMenu + 140, 335);
 
+
+/*
+
+        if (GameButtonFocus(500, 200))              g2 = 1;
+        if (GameButtonFocus(800, 200))              g3 = 1;
+        if (GameButtonFocus(1100, 200))              g4 = 1;
+        if (GameButtonFocus(200, 500))              g5 = 1;
+        if (GameButtonFocus(500, 500))              g6 = 1;
+        if (GameButtonFocus(800, 500))              g7 = 1;
+*/
+
     //
-    if(g2 == 0)
-    {
     txSetColour(TX_WHITE, 2);
     txSetFillColour(TX_BLACK);
-    txRectangle(xMenu + 300, 200, xMenu + 500, 400);
-    }
-    if(g2 == 1)
-    {
-    txSetColour(TX_WHITE, 2);
-    txSetFillColour(TX_BLACK);
-    txRectangle(xMenu + 290, 210, xMenu + 510, 390);
-    }
+    if(GameButtonFocus(500, 200))
+            txRectangle(xMenu + 290, 210, xMenu + 510, 390);
+    else    txRectangle(xMenu + 300, 200, xMenu + 500, 400);
 
     txSetColour(TX_WHITE);
     txSetFillColour(TX_WHITE);
     txRectangle(xMenu + 310, 250, xMenu + 320, 300);
-
-    txSetColour(TX_WHITE);
-    txSetFillColour(TX_WHITE);
     txRectangle(xMenu + 310, 250, xMenu + 320, 300);
-
-    txSetColour(TX_WHITE);
-    txSetFillColour(TX_WHITE);
     txRectangle(xMenu + 490, 320, xMenu + 480, 370);
-
-    txSetColour(TX_WHITE);
-    txSetFillColour(TX_WHITE);
     txCircle(xMenu + 430, 310, 10);
 
 
     //
-    if(g3 == 0)
-    {
-    txSetColour(TX_WHITE, 2);
-    txSetFillColour(TX_BLACK);
-    txRectangle(xMenu + 600, 200, xMenu + 800, 400);
-    }
-    if(g3 == 1)
-    {
-    txSetColour(TX_WHITE, 2);
-    txSetFillColour(TX_BLACK);
-    txRectangle(xMenu + 590, 210, xMenu + 810, 390);
-    }
+    if(GameButtonFocus(800, 200))
+            txRectangle(xMenu + 590, 210, xMenu + 810, 390);
+    else    txRectangle(xMenu + 600, 200, xMenu + 800, 400);
+
 
     txSetColour(TX_ORANGE);
     txSetFillColour(TX_ORANGE);
@@ -90,7 +94,7 @@ void menu(int g, int g2, int g3, int g4, int g5, int g6, int g7, int xMenu)
     txLine(xMenu + 650, 230, xMenu + 650, 260);
     txLine(xMenu + 700, 290, xMenu + 700, 320);
     txCircle(xMenu + 750, 340, 20);
-
+    /*
     //
     if(g4 == 0)
     {
@@ -172,7 +176,7 @@ void menu(int g, int g2, int g3, int g4, int g5, int g6, int g7, int xMenu)
     txRectangle(xMenu + 730, 520, xMenu + 710, 540);
     txLine(xMenu + 720, 540, xMenu + 720, 555);
     //
-
+      */
 
     txSetColour(TX_WHITE);
     txSetFillColour(TX_WHITE);
@@ -184,32 +188,6 @@ void menu(int g, int g2, int g3, int g4, int g5, int g6, int g7, int xMenu)
 
 
 }
-
-int GameButtonOpen(int xgbo, int ygbo)
-{
-    int Game = 0;
-    if (txMouseX() >= xgbo &&
-        txMouseX() <= xgbo + 200 &&
-        txMouseY() >= ygbo &&
-        txMouseY() <= ygbo + 200 &&
-        txMouseButtons() & 2)
-    {
-        Game = 1;
-    }
-}
-
-int GameButtonFocus(int xgbo, int ygbo)
-{
-    int Game = 0;
-    if (txMouseX() >= xgbo &&
-        txMouseX() <= xgbo + 200 &&
-        txMouseY() >= ygbo &&
-        txMouseY() <= ygbo + 200)
-    {
-        Game = 1;
-    }
-}
-
 
 struct Brick
 {
@@ -387,13 +365,6 @@ int main()
     //menu
     int xMenu = 200;
     int Game = 0;
-    int g = 0;
-    int g2 = 0;
-    int g3 = 0;
-    int g4 = 0;
-    int g5 = 0;
-    int g6 = 0;
-    int g7 = 0;
 
     //картинки
     HDC tankUp = txLoadImage("tankUp.bmp");
@@ -431,7 +402,7 @@ int main()
         txSetFillColour(TX_BLACK);
         txClear();
 
-        Game = 0;
+        //Game = 0;
 
         if (Game == 0)
     {
@@ -441,15 +412,7 @@ int main()
         txSetFillColour(TX_WHITE);
         txTextOut(10, 10, "БЕТА 1.12");
 
-        menu(g, g2, g3, g4, g5, g6, g7, xMenu);
-
-        g = 0;
-        g2 = 0;
-        g3 = 0;
-        g4 = 0;
-        g5 = 0;
-        g6 = 0;
-        g7 = 0;
+        menu(xMenu);
 
         if (GameButtonOpen(200, 200))             Game = 1;
         else if (GameButtonOpen(500, 200))        Game = 2;
@@ -459,19 +422,6 @@ int main()
         else if (GameButtonOpen(500, 500))       Game = random(1, 7);
         else if (GameButtonOpen(800, 500))       Game = 7;
         else if (GameButtonOpen(1000, 500))       Game = 8;
-
-        if (GameButtonFocus(200, 200))              g = 1;
-        if (GameButtonFocus(500, 200))              g2 = 1;
-        if (GameButtonFocus(800, 200))              g3 = 1;
-        if (GameButtonFocus(1100, 200))              g4 = 1;
-        if (GameButtonFocus(200, 500))              g5 = 1;
-        if (GameButtonFocus(500, 500))              g6 = 1;
-        if (GameButtonFocus(800, 500))              g7 = 1;
-
-
-
-
-
     }
 
         else if(Game == 1)
