@@ -1,0 +1,11 @@
+# depslib dependency file v1.0
+1612624990 source:c:\users\user\downloads\טדדנא\main.cpp
+	"TXLib.h"
+	"pyla.cpp"
+	"tank2.cpp"
+
+1610808583 c:\users\user\downloads\טדדנא\tank2.cpp
+	"TXLib.h"
+
+1612624959 c:\users\user\downloads\טדדנא\pyla.cpp
+
