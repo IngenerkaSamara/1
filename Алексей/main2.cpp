@@ -1,47 +1,43 @@
 #include "TXLib.h"
+#include "pers.cpp"
 #include "stolknovenie.cpp"
 
-int checkWallX(int xPers)
+bool click(int x, int y, int x2, int y2)
 {
-   if(xPers < 0)
-        {
-            xPers = 0;
-        }
-        if(xPers > 1200)
-        {
-            xPers = 1200;
-        }
-return xPers;
+    if (txMouseButtons() == 1 &&
+        txMouseX() >= x && txMouseX() <= x2 &&
+        txMouseY() >= y && txMouseY() <= y2)
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
-struct Pers
-{
-    HDC pic;
-    int x;
-    int y;
-    bool visible;
-};
 
-struct Pers1
-{
-    HDC pic;
-    int x;
-    int y;
-    bool visible;
-};
 
-void drawPers(Pers vrag)
+void checkWallX(int *xPersm int *yPers)
 {
-    if (vrag.visible)
-        txTransparentBlt(txDC(),vrag.x,vrag.y,99,99,vrag.pic, 0, 0, TX_WHITE);
+    if(*xPers < 0)
+    {
+        *xPers = 0;
+    }
+    if(*xPers > 1200)
+    {
+        *xPers = 1200;
+    }
+    /*if(pers.y < 0)
+    {
+        pers.y = 0;
+    }
+    if(pers.y > 800)
+    {
+        pers.y = 800;
+    }  */
 }
 
-void drawPers1(Pers stary)
-{
-    if(stary.visible)
-      txTransparentBlt(txDC(),stary.x,stary.y,68,68,stary.pic, 0, 0, TX_WHITE);
-
-}
 
 int main()
 {
@@ -49,12 +45,12 @@ int main()
 
 //Переменные
     //Главный герой
-    HDC persShiroki = txLoadImage("Lv13.bmp");
+    HDC persShiroki = txLoadImage("pictures/Lv13.bmp");
     HDC persUlybka = txLoadImage("pictures/Lv12.bmp");
-    HDC persTixo = txLoadImage("Lv11.bmp");
-    HDC persKrutoi = txLoadImage("Lvl21.bmp");
+    HDC persTixo = txLoadImage("pictures/Lv11.bmp");
+    HDC persKrutoi = txLoadImage("pictures/Lvl21.bmp");
     HDC pers1 = txLoadImage("pictures/Lvl1.bmp");
-    HDC pers2 = txLoadImage("Lv14.bmp");
+    HDC pers2 = txLoadImage("pictures/Lv14.bmp");
     HDC pers3 = persShiroki;
     HDC pers4 = persUlybka;
     HDC pers5 = persTixo;
@@ -62,8 +58,8 @@ int main()
     Pers pers = {pers1, 100, 200};
 
     HDC Star = txLoadImage("star.bmp");
-    Pers1 stary[2];
-    stary[0] = {Star, -200, 200, true};
+    Pers stary[2];
+    stary[0] = {Star, 200, 200, true};
     stary[1] = {Star, -200, 300, true};
 
     //Враги
@@ -87,6 +83,9 @@ int main()
     int level = 1;
     int Fonx = 0;
 
+    Pers vorotas[5];
+    vorotas[0] = {vorota, 300, 700, true};
+
     int xvor = 300;  int yvor = 700;
     int xvor2 = 600; int yvor2 = 700;
     int xvor3 = -300; int yvor3 = -300;
@@ -107,7 +106,7 @@ int main()
         HDC heart = txLoadImage("Heart.bmp");
         HDC Vor3 = txLoadImage("Vlr3.bmp");
         HDC Heart = txLoadImage("Life.bmp");
-        HDC Lvl1 = txLoadImage("Lvl-1.bmp");
+        HDC Lvl1 = txLoadImage("pictures/Lvl-1.bmp");
         HDC Fon = txLoadImage("Ащт.bmp");
         HDC vixod2 = txLoadImage("vixod2.bmp");
         //HDC ExitK = txLoadImage("ExitK.bmp");
@@ -223,11 +222,16 @@ int main()
             txSetColour(TX_WHITE);
             txSelectFont("Times New Roman",35);
             txTextOut(240,250, "Всем привет! Это моя первая игра");
+
+            txDrawText(100, 300, 800, 600, "Ваша цель пройти все 5 уровней,"
+                "\nуклоняясь от врагов\n\n");
+
+            txTextOut(300, 500, "Вот это ваши враги");
+            txTransparentBlt(txDC(),200,500,99,99,vragi[0].pic, 0, 0, TX_WHITE);
+
             txTransparentBlt(txDC(),100,650,87,87,nasad, 0, 0, TX_WHITE);
 
-            if (txMouseButtons() == 1 &&
-                txMouseX() >= 100 &&                txMouseX() <= 187 &&
-                txMouseY() >= 650 &&                 txMouseY() <= 737)
+            if (click(100, 650, 187, 737))
             {
                 settings = false;
             }
@@ -259,26 +263,15 @@ bool menu = false;
             txTransparentBlt(txDC(),300,400,123,36,Knopka6, 0, 0, TX_WHITE);
            // txTransparentBlt(txDC(),1100,100,72,72,Knopka4, 0, 0, TX_WHITE);
             txTransparentBlt(txDC(),80,50,49,49,vixodG, 0, 0, TX_WHITE);
-           if (txMouseButtons() == 1 &&
-                txMouseX() >= 300 &&
-                txMouseX() <= 423 &&
-                txMouseY() >= 400 &&
-                txMouseY() <= 436)
+            if (click (300, 400, 423, 436))
             {
                 menu = false;
                 //gameStart = true;
             }
-           if (txMouseButtons() == 1 &&
-                txMouseX() >= 80 &&
-                txMouseX() <= 129 &&
-                txMouseY() >= 50 &&
-                txMouseY() <= 99)
+            if (click(80, 50, 129, 99))
             {
                 mneNadoelo = true;
                 //gameStart = true;
-
-
-
             }
         }
 
@@ -338,26 +331,10 @@ bool menu = false;
 
 
             txTransparentBlt(txDC(),pers.x-36,pers.y-36,72,72,pers.pic, 0, 0, TX_WHITE);
-
-            for (int i = 0; i < 2; i = i + 1)
-            {
-                txTransparentBlt(txDC(),stary[i].x-36,stary[i].y-36,68,68,stary[i].pic, 0, 0, TX_WHITE);
-                stary[i].x = checkWallX(stary[i].x);
-            }
-
-
-            pers.x = checkWallX(pers.x);
+            checkWall(&pers.x, &pers.y);
 
 
 
-            if(pers.y < 0)
-            {
-                pers.y = 0;
-            }
-            if(pers.y > 800)
-            {
-                pers.y = 800;
-            }
     //пЕРСОНАЖИ
       /*
         txSetColour(TX_WHITE);
@@ -387,10 +364,10 @@ bool menu = false;
             }
 
             for (int i = 0; i < 11; i++)
-                drawPers(vragi[i]);
+                drawVrag(vragi[i]);
 
             for (int i = 0; i < 2; i++)
-              Pers1(stary[i]);
+                drawStar(stary[i]);
 
 
             txTransparentBlt(txDC(),xvor,yvor,84,84,vorota, 0, 0, TX_WHITE);
@@ -450,7 +427,7 @@ bool menu = false;
        //переход с 1 на 2 уровень
             if (level == 2)
             {
-             //   pers1 = txLoadImage("Lvl21.bmp");
+             //   pers1 = txLoadImage("pictures/Lvl21.bmp");
              //   pers2 = txLoadImage("222.bmp");
              //   pers3 = txLoadImage("Lvl23.bmp");
              //   pers4 = txLoadImage("Lvl24.bmp");
