@@ -1,0 +1,2 @@
+[1201/201737.101:ERROR:crash_report_database_win.cc(465)] unexpected header
+[0119/170409.716:ERROR:directory_reader_win.cc(43)] FindFirstFile: Системе не удается найти указанный путь. (0x3)
