@@ -30,14 +30,9 @@
     txDrawText  (900, 600, 1200, 700, "чтобы выйти из этого gym заплати 300 bucks или нажми esc два раза \n");
     }
 
-    void drawVan(int x, int y, HDC van)
+    void drawMan(int x, int y, HDC van)
     {
     txTransparentBlt (txDC(), x, y, 50, 50, van, 0 , 0 , RGB(255, 174, 201));
-    }
-
-    void drawBilly(int x, int y, HDC billy)
-    {
-    txTransparentBlt (txDC(), x, y, 50, 50, billy, 0 , 0 , RGB(255, 174, 201));
     }
 
     void drawCum(int x, int y, HDC cum)
@@ -67,9 +62,12 @@
 
 
     HDC Deadscreen = txLoadImage("Pics/deadscreen.bmp");
-    HDC life3 = txLoadImage("Pics/life3.bmp");
-    HDC life2 = txLoadImage("Pics/life2.bmp");
-    HDC life1 = txLoadImage("Pics/life1.bmp");
+
+    HDC lives[3];
+    lives[2] = txLoadImage("Pics/life3.bmp");
+    lives[1] = txLoadImage("Pics/life2.bmp");
+    lives[0] = txLoadImage("Pics/life1.bmp");
+
     HDC billyRight = txLoadImage("Pics/billy1.bmp");
     HDC billyLeft = txLoadImage("Pics/billy.bmp");
     HDC billy = billyRight;
@@ -127,19 +125,17 @@
             printf("The current time is: %2d:%02d:%02d.%02d\n",
             t.ti_hour, t.ti_min, t.ti_sec, t.ti_hund);
             }*/
-            sprintf(str, "%d", score);//Writing car_x_coord value to str //!xD
+            sprintf(str, "%d", score);//Вывод очков на экран //!xD
             txTextOut(100, 100, str);
             //txDrawText  (1000, 100, 1200, 150, "баночек симена собрано - score  \n");
             txSetFillColor(RGB(255, 255, 255));
-            drawVan(x, y, van);
-            drawVan(x1, y1, billy);
+            drawMan(x, y, van);
+            drawMan(x1, y1, billy);
             drawCum(Cum.x, Cum.y, cum);
             if (GetAsyncKeyState('W'))
             {
                   y = y - speed;
-
             }
-
 
             if (GetAsyncKeyState('S'))
             {
@@ -166,49 +162,26 @@
             {    //catch sounds
             srand(time(0));
 
-            if (sn == 1)
-            {
-            s = "Sounds/s1.wav";
-            }
-            if (sn == 2)
-            {
-            s = "Sounds/s3.wav";
-            }
-            if (sn == 3)
-            {
-            s = "Sounds/s3.wav";
-            }
+            if (sn == 1)                    s = "Sounds/s1.wav";
+            if (sn == 2)                    s = "Sounds/s3.wav";
+            if (sn == 3)                    s = "Sounds/s3.wav";
             }
 
 
-            {    //lifes
-            if (life == 3)
-            {
-                drawLife(life3);
-            }
-            if (life == 2)
-            {
-                drawLife(life2);
-            }
-            if (life == 1)
-            {
-                drawLife(life1);
-            }
-            }
+            //lifes
+            drawLife(lives[life]);
 
 
             {    //semen
-            if (x < Cum.x + 50)
-                if (x > Cum.x - 50)
-                    if (y < Cum.y + 50)
-                        if (y > Cum.y - 50)
-                        {
-                           score += 1;
-                           speed += 1;
-                           Cum.x = random(50, 1200);
-                           Cum.y = random(50, 650);
-                        }
-             }
+            if (x < Cum.x + 50 && x > Cum.x - 50 &&
+                y < Cum.y + 50 && y > Cum.y - 50)
+            {
+               score += 1;
+               speed += 1;
+               Cum.x = random(50, 1200);
+               Cum.y = random(50, 650);
+            }
+            }
 
 
             {    //catching
@@ -274,4 +247,3 @@
 
     return 0;
 }
-

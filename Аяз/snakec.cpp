@@ -53,35 +53,26 @@ struct Hvost
      //POINT hvost[10];
      int sum = 0;
 
-    HDC  body0 = txLoadImage("Pics/body0.bmp" );
-    HDC  body1 = txLoadImage("Pics/body1.bmp" );
-    HDC  body2 = txLoadImage("Pics/body2.bmp" );
-    HDC  body3 = txLoadImage("Pics/body3.bmp" );
-    HDC  body4 = txLoadImage("Pics/body4.bmp" );
-    HDC  body5 = txLoadImage("Pics/body5.bmp" );
-    HDC  body6 = txLoadImage("Pics/body6.bmp" );
+    HDC  body[7];
+    body[0] = txLoadImage("Pics/body0.bmp" );
+    body[1] = txLoadImage("Pics/body1.bmp" );
+    body[2] = txLoadImage("Pics/body2.bmp" );
+    body[3] = txLoadImage("Pics/body3.bmp" );
+    body[4] = txLoadImage("Pics/body4.bmp" );
+    body[5] = txLoadImage("Pics/body5.bmp" );
+    body[6] = txLoadImage("Pics/body6.bmp" );
 
     HDC fruit = txLoadImage("Pics/fruit.bmp");
 
     Hvost hvost[100];
     int n_hvost = 1;
-
-    hvost[0] = {0, 20, body0};
-    hvost[1] = {0, 20, body1};
-    hvost[2] = {0, 20, body2};
-    hvost[3] = {0, 20, body3};
-    hvost[4] = {0, 20, body4};
-    hvost[5] = {0, 20, body5};
-    hvost[6] = {0, 20, body6};
-
     HDC pics[7];
-    pics[0] = body0;
-    pics[1] = body1;
-    pics[2] = body2;
-    pics[3] = body3;
-    pics[4] = body4;
-    pics[5] = body5;
-    pics[6] = body6;
+
+    for (int i = 0; i < 7; i ++)
+    {
+        hvost[i] = {0, 20, body[i]};
+        pics[i] = body[i];
+    }
 
 
     while(!GetAsyncKeyState(VK_SPACE))
@@ -142,14 +133,13 @@ struct Hvost
     }
 
     {    //!управление
-        if (GetAsyncKeyState('W') ||
-            GetAsyncKeyState(VK_UP))
+        if ((GetAsyncKeyState('W') || GetAsyncKeyState(VK_UP)) && speedY < 20)
         {
             speedY = -20;
             speedX =   0;
         }
 
-        else if (GetAsyncKeyState('S'))
+        else if ((GetAsyncKeyState('S') || GetAsyncKeyState(VK_DOWN)) && speedY > -20)
         {
             speedY =  20;
             speedX =   0;
