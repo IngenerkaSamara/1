@@ -98,23 +98,28 @@ int main()
     int xM2R3 = 1; int yM2R3 = 1;
     int xM3R3 = 1; int yM3R3 = 1;
 
-    Men men1 ={random (1305, 1400), random (1405, 1500), 1, txLoadImage("men.bmp"), 0, 0};
-    Men men2 ={random (1555, 1600), random (1155, 1255), 1, men1.picMen, 0, 0};
-    Men men3 ={random (4000, 4100), random (2200, 2100), 1, men1.picMen, 0, 0};
+    Men men[3];
+    men[0] ={random (1305, 1400), random (1405, 1500), 1, txLoadImage("men.bmp"), 0, 0};
+    men[1] ={random (1555, 1600), random (1155, 1255), 1, men[0].picMen, 0, 0};
+    men[2] ={random (4000, 4100), random (2200, 2100), 1, men[0].picMen, 0, 0};
 
 
     int timep = 40;
     int Idea = 0;
-    int pict = 1;
+    int level = 1;
     int kill = 0;
     int backgroundX = 1000;
     int backgroundY = 1000;
     int Round = 1;
     COLORREF color = TX_BLUE;
     COLORREF color2 = TX_RED;
-    HDC pic = txLoadImage("база.bmp");
-    HDC pic2 = txLoadImage("база 2.bmp");
-    HDC pic3 = txLoadImage("база 3.bmp");
+
+    //ФОн
+    HDC pic[3];
+    pic[0] = txLoadImage("база.bmp");
+    pic[1] = txLoadImage("база 2.bmp");
+    pic[2] = txLoadImage("база 3.bmp");
+
     HDC picMenu = txLoadImage("Меню.bmp");
     HDC picMenu2 = txLoadImage("Меню2.bmp");
     int xV = 1300;
@@ -125,19 +130,17 @@ int main()
     int Start = 0;
     while (Start != 1)
     {
-          if (music == 1)
-          {
-          txTransparentBlt (txDC(), 0, 0,
-          1400, 700, picMenu, 0, 0, TX_WHITE);
+      if (music == 1)
+      {
+          txTransparentBlt (txDC(), 0, 0,          1400, 700, picMenu, 0, 0, TX_WHITE);
           menu = 1;
-          }
+      }
 
-          if (music == 0)
-          {
-          txTransparentBlt (txDC(), 0, 0,
-          1400, 700, picMenu2, 0, 0, TX_WHITE);
+      if (music == 0)
+      {
+          txTransparentBlt (txDC(), 0, 0,          1400, 700, picMenu2, 0, 0, TX_WHITE);
           menu = 2;
-          }
+      }
 
 
           if (txMouseX() > 1318 && txMouseX() < 1400 &&
@@ -236,26 +239,10 @@ int main()
         txClear();
 
 
-        if (pict == 1)
-        {
         Win32::TransparentBlt (txDC(), backgroundX, backgroundY,
-                          6000, 3000, pic,
+                          6000, 3000, pic[level-1],
                           0, 0, 6000, 3000, 0);
-        }
 
-        if (pict == 2)
-        {
-        Win32::TransparentBlt (txDC(), backgroundX, backgroundY,
-                          6000, 3000, pic2,
-                          0, 0, 6000, 3000, 0);
-        }
-
-        if (pict == 3)
-        {
-         Win32::TransparentBlt (txDC(), backgroundX, backgroundY,
-                          6000, 3000, pic3,
-                          0, 0, 6000, 3000, 0);
-        }
 
         timep = timep - 1;
         if (timep < 0)
@@ -266,13 +253,11 @@ int main()
             sprintf(stroka, "перезарядка %d", timep);
             txDrawText(1100, 600, 1400, 700, stroka);
 
-        MenVishin(men1, backgroundX, backgroundY);
-        MenVishin(men2, backgroundX, backgroundY);
-        MenVishin(men3, backgroundX, backgroundY);
-
-        menKilled(&men1, backgroundX, backgroundY, &kill, Idea, &timep);
-        menKilled(&men2, backgroundX, backgroundY, &kill, Idea, &timep);
-        menKilled(&men3, backgroundX, backgroundY, &kill, Idea, &timep);
+        for (int i = 0; i < 3; i++)
+        {
+            MenVishin(men[0], backgroundX, backgroundY);
+            menKilled(&men[0], backgroundX, backgroundY, &kill, Idea, &timep);
+        }
 
         if (txMouseButtons() && timep < 1)
         {
@@ -330,13 +315,13 @@ int main()
 
             if (Round == 1)
             {
-                pict = 2;
-                men1 ={xM1R2, yM1R2, 1, men1.picMen, 0, 0};
-                men2 ={xM2R2, yM2R2, 1, men1.picMen, 0, 0};
-                men3 ={xM3R2, yM3R2, 1, men1.picMen, 0, 0};
+                level = 2;
+                men[0] ={xM1R2, yM1R2, 1, men[0].picMen, 0, 0};
+                men[1] ={xM2R2, yM2R2, 1, men[0].picMen, 0, 0};
+                men[2] ={xM3R2, yM3R2, 1, men[0].picMen, 0, 0};
                 txSetColor(TX_RED);
                 Win32::TransparentBlt (txDC(), backgroundX, backgroundY,
-                              1400, 700, pic2,
+                              1400, 700, pic[level-1],
                               0, 0, 6000, 3245, 0);
                 txSelectFont("Comic Sans MS", 200);
                 txDrawText(10, 10, 1400, 700, "Уровень 2");
@@ -345,10 +330,10 @@ int main()
 
             if (Round == 2)
             {
-                pict = 3;
-                men1 ={xM1R3, yM1R3, 1, men1.picMen, 0, 0};
-                men2 ={xM2R3, yM2R3, 1, men1.picMen, 0, 0};
-                men3 ={xM3R3, yM3R3, 1, men1.picMen, 0, 0};
+                level = 3;
+                men[0] ={xM1R3, yM1R3, 1, men[0].picMen, 0, 0};
+                men[1] ={xM2R3, yM2R3, 1, men[0].picMen, 0, 0};
+                men[2] ={xM3R3, yM3R3, 1, men[0].picMen, 0, 0};
                 txSetColor(TX_RED);
                 txSelectFont("Comic Sans MS", 200);
                 txDrawText(10, 10, 1400, 700, "Уровень 3");
@@ -357,39 +342,28 @@ int main()
 
             if (Round >= 3)
             {
-                men1 ={random (0 - backgroundX, 1200 - backgroundX), random (0 - backgroundY, 500 - backgroundY), 1, men1.picMen, 0, 0};
-                men2 ={random (0 - backgroundX, 1200 - backgroundX), random (0 - backgroundY, 500 - backgroundY), 1, men1.picMen, 0, 0};
-                men3 ={random (0 - backgroundX, 1200 - backgroundX), random (0 - backgroundY, 500 - backgroundY), 1, men1.picMen, 0, 0};
+                men[0] ={random (0 - backgroundX, 1200 - backgroundX), random (0 - backgroundY, 500 - backgroundY), 1, men[0].picMen, 0, 0};
+                men[1] ={random (0 - backgroundX, 1200 - backgroundX), random (0 - backgroundY, 500 - backgroundY), 1, men[0].picMen, 0, 0};
+                men[2] ={random (0 - backgroundX, 1200 - backgroundX), random (0 - backgroundY, 500 - backgroundY), 1, men[0].picMen, 0, 0};
 
                 while (!GetAsyncKeyState(VK_ESCAPE))
                 {
-                    pict = 3;
+                    level = 3;
                     txSetFillColor(TX_BLACK);
                     txSetColor(TX_BLACK);
                     txRectangle(0, 0, 1400, 700);
 
                     Idea = 1;
 
+                    for (int i = 0; i < 3; i++)
+                    {
+                        MenVishin(men[i], backgroundX, backgroundY);
+                        men[i].vishin = 0;
 
-                    MenVishin(men1, backgroundX, backgroundY);
-                    MenVishin(men2, backgroundX, backgroundY);
-                    MenVishin(men3, backgroundX, backgroundY);
-
-                    men1.vishin = 0;
-                    men2.vishin = 0;
-                    men3.vishin = 0;
-
-                    men1.kadr = men1.kadr + 1;
-                    if (men1.kadr > 7)
-                        men1.kadr = 0;
-
-                    men2.kadr = men2.kadr + 1;
-                    if (men2.kadr > 7)
-                        men2.kadr = 0;
-
-                    men3.kadr = men3.kadr + 1;
-                    if (men3.kadr > 7)
-                        men3.kadr = 0;
+                        men[i].kadr = men[i].kadr + 1;
+                        if (men[i].kadr > 7)
+                            men[i].kadr = 0;
+                    }
 
                     txSetColor(TX_RED);
                     txSelectFont("Comic Sans MS", 200);
@@ -415,6 +389,6 @@ int main()
 
 
     txDeleteDC(pic);
-    txDeleteDC(pic2);
+    txDeleteDC(pic[1]);
     return 0;
 }
