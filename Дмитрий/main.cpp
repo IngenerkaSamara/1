@@ -37,49 +37,55 @@ int checkWallY(int yMan)
     return yMan;
 }
 
+struct Enemy
+{
+    int x;
+    int y;
+    int kadr;
+    int life;
+    HDC picLeft;
+    HDC picRight;
+    HDC pic;
+};
+
 int main()
 {
     txCreateWindow (1400, 800);
 
-   int monsterX = 700, monsterY = 500;
-   int kadrMonster = 0;
-   int xHeart =  65;
-   int yHeart = 60;
-   HDC Heart = txLoadImage("heart.bmp");
-   HDC monsterRight = txLoadImage("monsterRight.bmp");
-   HDC monsterLeft = txLoadImage("monsterLeft.bmp");
-   HDC monster = monsterLeft;
 
-   int xOboima = 1235 , yOboima = 50;
-   HDC oboima = txLoadImage("oboima.bmp");
+    //Enemy monster1 = {700, 500, 0, 3, ...}
+    int monsterX = 700, monsterY = 500;
+    int kadrMonster = 0;
+    HDC monsterRight = txLoadImage("monsterRight.bmp");
+    HDC monsterLeft = txLoadImage("monsterLeft.bmp");
+    HDC monster = monsterLeft;
+    int monsterLife = 3;
 
 
 
-   COLORREF color = TX_RED;
-
-   int life = 3;
-
-   HDC background = txLoadImage("bg.bmp");
-
-   int xMan = 400, yMan = 700;
-   int kadrMan = 0;
-   HDC manRight = txLoadImage ("manRight.bmp");
-   HDC manLeft = txLoadImage ("manLeft.bmp");
-   HDC man = manRight;
 
 
 
-   //int xBullet = 0;
-   //int yBullet = 0;
-   int speedBullet = 0;
 
-   int n_bullet = 10;
-   //bool visibleBullet = false;
-   //HDC Bullet = txLoadImage ("пуля.bmp");
+    HDC background = txLoadImage("bg.bmp");
+    HDC bg2 = txLoadImage("bg2.bmp");
+    HDC Heart = txLoadImage("heart.bmp");
+    HDC oboima = txLoadImage("oboima.bmp");
 
-   Bullet bullet1 = {0, 0, 0, false, txLoadImage ("пуля.bmp")};
 
-   HDC bg2 = txLoadImage("bg2.bmp");
+    int life = 3;
+    int xMan = 400, yMan = 700;
+    int kadrMan = 0;
+    HDC manRight = txLoadImage ("manRight.bmp");
+    HDC manLeft = txLoadImage ("manLeft.bmp");
+    HDC man = manRight;
+
+
+
+    int speedBullet = 0;
+    int n_bullet = 10;
+    Bullet bullet1 = {0, 0, 0, false, txLoadImage ("пуля.bmp")};
+
    HDC pers1 = txLoadImage("pers1.bmp");
    HDC pers2 = txLoadImage("pers2.bmp");
    HDC pers;
@@ -101,21 +107,18 @@ int main()
 
 
 
-   while (!GetAsyncKeyState(VK_ESCAPE))
-   {
+    while (!GetAsyncKeyState(VK_ESCAPE))
+    {
          txBegin();
          txSetFillColor(TX_BLACK);
          txClear();
-
-         txSetFillColor(color);
          txBitBlt(txDC(), 0, 0, 1400, 900, background);
-         //txBitBlt(txDC(), xMan - 100, yMan - 100, 290, 190, man);
-         //txBitBlt(txDC(), monsterX + 20, monsterY, 700, 500, monster);
-
 
          txTransparentBlt (txDC(), xMan, yMan, 125, 140, man, 125 * kadrMan, 0, TX_WHITE);
-         txTransparentBlt (txDC(), monsterX, monsterY, 100, 198, monster, 100 * kadrMonster, 0, TX_WHITE);
-         //txTransparentBlt (txDC(), xOboima, yOboima, 100, 150, oboima, 0, TX_BLACK);
+
+         if (monsterLife > 0)
+            txTransparentBlt (txDC(), monsterX, monsterY, 100, 198, monster, 100 * kadrMonster, 0, TX_WHITE);
+         //txTransparentBlt (txDC(), 1235, 50, 100, 150, oboima, 0, TX_BLACK);
 
 
          txSetFillColor(TX_YELLOW);
@@ -127,22 +130,23 @@ int main()
          txLine(600, 100, 600, 150);
          txLine(600, 150, 500, 150);
 
-         if(yMan < 700)
+         if(yMan < 600)
          {
              yMan = 600;
          }
 
-         if(yMan > 700);
+         if(yMan > 700)
          {
-             yMan = 600;
+             yMan = 700;
          }
 
-         int nomer = 0;
-         while (nomer < life)
-         {
-            txTransparentBlt (txDC(), xHeart + 30 * nomer, yHeart, 100, 120, Heart, 0, 0, TX_WHITE);
-              nomer = nomer + 1;
-         }
+        //Вывод жизней на экран
+        int nomer = 0;
+        while (nomer < life)
+        {
+            txTransparentBlt (txDC(), 65 + 30 * nomer, 60, 100, 120, Heart, 0, 0, TX_WHITE);
+            nomer = nomer + 1;
+        }
 
          if(bullet1.visible)
          {
@@ -162,7 +166,8 @@ int main()
          if(xMan + 100  > monsterX &&
             xMan        < monsterX + 260 &&
             yMan + 240  > monsterY &&
-            yMan        < monsterY + 140)
+            yMan        < monsterY + 140 &&
+            monsterLife > 0)
          {
              life = life - 1;
              xMan = 100;
@@ -172,15 +177,17 @@ int main()
 
 
 
-         if(monsterX + 260  > bullet1.x &&
+        if (monsterX + 260  > bullet1.x &&
             monsterX        < bullet1.x + 13 &&
             monsterY + 140  > bullet1.y &&
-            monsterY        < bullet1.y + 5)
-         {
-
+            monsterY        < bullet1.y + 5 &&
+            bullet1.visible &&
+            monsterLife > 0)
+        {
             bullet1.visible = false;
-            monsterX = 1200;
-         }
+            monsterLife = monsterLife - 1;
+            monsterX = monsterX + 300;
+        }
 
 
 
@@ -283,12 +290,18 @@ int main()
          }
 
 
-        if (bullet1.x > 1400)
+        if (bullet1.x > 1400 || bullet1.x < -10)
             bullet1.visible = false;
 
-        if (bullet1.x < -10)
-            bullet1.visible = false;
-
+        //Финиш уровня
+        if (xMan > 1100)
+        {
+            xMan = 100;
+            n_bullet = 20;
+            monsterLife = 8;
+            monsterX = 1200;
+            background = bg2;
+        }
 
 
 
