@@ -1,5 +1,7 @@
 #include "TXLib.h"
 #include "Chel.cpp"
+#include "Fire.cpp"
+#include "Monster.cpp"
 
 /*
 for (int nomer = 0; nomer < 3; nomer = nomer + 1)
@@ -14,22 +16,6 @@ const int PAGE_MENU = 1;
 //const int PAGE_CASTLE = 2;
 //const int PAGE_NATURE = 3;
 
-struct Monster
-{
-    int x;
-    int y;
-    int hp;
-    HDC monsterA;
-    HDC monsterD;
-    HDC monster;
-};
-
-void drawMonster(Monster monster1)
-{
-    if (monster1.hp > 0)
-        txTransparentBlt (txDC(), monster1.x, monster1.y,   92,  62, monster1.monster,  0, 0, TX_WHITE);
-}
-
 struct Bullet
 {
     int v;
@@ -41,25 +27,6 @@ struct Bullet
     HDC bulR;
     HDC bul;
 };
-
-struct Fire
-{
-    int x;
-    int y;
-    int f;
-    int coll;
-    int v;
-
-    HDC fireR;
-    HDC fireL;
-    HDC fire;
-};
-
-void drawFire (Fire fire1)
-{
-    if (fire1.f == 1)
-        txTransparentBlt (txDC(), fire1.x, fire1.y,   19,   9, fire1.fire,  0, 0, TX_WHITE);
-}
 
 void monsterBul (Bullet* bul1, Monster* monster1)
 {
@@ -150,6 +117,15 @@ void bulFly (Bullet* bul1, HDC manRight, HDC manLeft, HDC man, int xMan, int yMa
     }
 }
 
+struct Floor
+{
+    int x;
+    int y;
+    int x2;
+    HDC pic;
+};
+
+
 int main()
 {
     txCreateWindow (1150, 650);
@@ -158,34 +134,29 @@ int main()
     char hp [100];
 
     int hpman = 100;
-
     int page = 1;
+    int level = 1;
 
     int xres = 1050;
     int yres = 0;
     HDC restart = txLoadImage ("картинки/restart.bmp");
 
-    int yl1 = 300;
-    int yl2 = 430;
-    HDC floor = txLoadImage ("картинки/gjk.bmp");
+    int n_floor = 3;
+    Floor floor[10];
+    floor[0] = {-500, 300, 650, txLoadImage ("картинки/gjk.bmp")};
+    floor[1] = { 850, 300, 1150, floor[0].pic};
+    floor[2] = {   0, 430, 1150, floor[0].pic};
+
 
     HDC wall = txLoadImage ("картинки/wall.bmp");
 
-    //int xmons = 900;
-    //int ymons = 238;
-    //int hpmons = 1;
-    //int levelm = 1;
     HDC monsterA = txLoadImage ("картинки/monsterA.bmp");
     HDC monsterD = txLoadImage ("картинки/monsterD.bmp");
     Monster monster1 = {900, 238, 1, monsterA, monsterD, monsterA};
     Monster monster2 = {300, 368, 1, monsterA, monsterD, monsterD};         //   struct
 
 
-    //int xfire = monster1.x;
-    //int yfire = monster1.y + 25;
-    //int firef = 1;
-    //int vfire = 0;
-    //int firecoll = 1;
+
     HDC fireL = txLoadImage ("картинки/fireball.bmp");
     HDC fireR = txLoadImage ("картинки/firebarr.bmp");
     Fire fire1 = {monster1.x, monster1.y + 25, 1, 1,  35, fireR, fireL, fireL};
@@ -213,10 +184,7 @@ int main()
     HDC man = manRight;
 
 
-    //int vbul = 0;
-    //int xbul = xMan;
-    //int ybul = 0;
-    //int bulf = 0;
+
 
     int fireMode = 1;
     int bulDist = 0;
@@ -256,26 +224,24 @@ int main()
             txTextOut (450, 300, "«амок");
             txTextOut (450, 400, "ѕрирода");
 
-            if (txMouseX() > 450 &&
-                txMouseY() > 300 &&
-
-                txMouseX() < 550 &&
-                txMouseY() < 350 &&
-
-                txMouseButtons() == 1)
+            if (txMouseX() > 450 &&                txMouseY() > 300 &&
+                txMouseX() < 550 &&                txMouseY() < 350)
             {
-                page = PAGE_GAME;
+                txSetFillColor(TX_RED);
+                txCircle(420, 320, 20);
+
+                if (txMouseButtons() == 1)
+                    page = PAGE_GAME;
             }
 
-            if (txMouseX() > 450 &&
-                txMouseY() > 400 &&
-
-                txMouseX() < 550 &&
-                txMouseY() < 450 &&
-
-                txMouseButtons() == 1)
+            if (txMouseX() > 450 &&                txMouseY() > 400 &&
+                txMouseX() < 550 &&                txMouseY() < 450)
             {
-                page = 3;
+                txSetFillColor(TX_RED);
+                txCircle(420, 420, 20);
+
+                if (txMouseButtons() == 1)
+                    page = 3;
             }
 
         }
@@ -285,9 +251,9 @@ int main()
         {
             txBitBlt (txDC(),    0,   0, 1150, 650,  wall);
 
-            txRectangle(-500, yl1 + 2,  650, yl1 + 7);
-            txRectangle( 850, yl1 + 2, 1150, yl1 + 7);
-            txRectangle(   0, yl2 + 2, 1150, yl2 + 7);
+            for (int i = 0; i < n_floor; i++)
+                txRectangle(floor[i].x, floor[i].y + 2, floor[i].x2, floor[i].y + 7);
+
             for (int nomer = 0; nomer < 3; nomer++)
             {
                 if (bul[nomer].f > 0)
@@ -399,36 +365,7 @@ int main()
         }
 
 
-        /*if (levelp == 1 && yMan > yl1 - 75 && (xMan < 650 || xMan > 770))
-        {
-            yMan = 225;
-            vyMan = 0;
-            jump = 0;
-            levelp = 1;
-        }
 
-        if (yMan > yl1 - 75 && (xMan > 650 && xMan < 770))
-        {
-            levelp = 2;
-        }
-
-        if (yMan < yl1 - 75 && (xMan > 650 && xMan < 770))                      //денчик слазиет
-        {
-            levelp = 1;
-        }
-
-        if (levelp == 2 && yMan < yl1 + 8 && (xMan < 650 || xMan > 770))
-        {
-            yMan = yl1 + 8;
-            vyMan = 0;
-        }
-
-        if (levelp == 2 && yMan > yl2 - 75)
-        {
-            yMan = yl2 - 75;
-            vyMan = 0;
-            jump = 0;
-        }*/
          // артинка пули
 
 
@@ -487,10 +424,9 @@ int main()
         }
      }
 
+    for (int i = 0; i < n_floor; i++)
+        txBitBlt (txDC(),  floor[i].x, floor[i].y, floor[i].x2 - floor[i].x, 8, floor[i].pic);
 
-    txBitBlt (txDC(),  850, yl1, 1150,   8, floor);
-    txBitBlt (txDC(),    0, yl2, 1150,   8, floor);
-    txBitBlt (txDC(), -500, yl1, 1150,   8, floor);
 
 
 
@@ -502,6 +438,24 @@ int main()
             if (xMan < 20)
             {
                 xMan = 20;
+            }
+
+            //”ровень пройден
+            if (xMan > 1100 && yMan > 350)
+            {
+                xMan = 0;
+                yMan = 300;
+                level = level + 1;
+
+                if (level == 2)
+                {
+                    //monster1=...
+                    n_floor = 4;
+                    floor[0] = {-500, 300, 650, txLoadImage ("картинки/gjk.bmp")};
+                    floor[1] = { 850, 300, 1150, floor[0].pic};
+                    floor[2] = {   0, 430,  500, floor[0].pic};
+                    floor[3] = { 500, 450, 1150, floor[0].pic};
+                }
             }
 
 
@@ -525,7 +479,7 @@ int main()
     txDeleteDC(fireR);
     txDeleteDC(fireL);
     txDeleteDC(wall);
-    txDeleteDC(floor);
+//    txDeleteDC(floor);
     txDeleteDC(monsterA);
     txDeleteDC(monsterD);
     txDeleteDC(restart);
